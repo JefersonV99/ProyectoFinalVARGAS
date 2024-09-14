@@ -1,31 +1,36 @@
-alert("🤑¡Bienvenid@ al simulador de Prestamos!🤑");
-
 // Verifica si el valor es un número válido y positivo
 function esNumeroValido(valor) {
     return valor !== "" && !/[^0-9.]/.test(valor) && Number(valor) > 0;
 }
 
-function simularPagos() {
-    const montoPrestamo = prompt("Ingresa el monto del préstamo:"); 
-    const tasaInteresFija = 2; 
-    const plazo = prompt("Ingresa el plazo del préstamo en meses:"); 
+function calcularPrestamo() {
+    const montoPrestamo = document.getElementById('loanAmount').value;
+    const plazo = document.getElementById('loanTerm').value;
+    const tasaInteresFija = 2;
+
+    const errorMessage = document.getElementById('errorMessage');
+    const results = document.getElementById('results');
+
+    // Limpiar mensajes de error y resultados anteriores
+    errorMessage.textContent = '';
+    results.classList.add('hidden');
 
     // Verificar que las entradas sean válidas
     if (!esNumeroValido(montoPrestamo)) {
-        console.log("El monto del préstamo debe ser un número positivo.");
+        errorMessage.textContent = "El monto del préstamo debe ser un número positivo.";
         return;
     }
     if (!esNumeroValido(plazo) || !Number.isInteger(Number(plazo))) {
-        console.log("El plazo debe ser un número entero positivo.");
+        errorMessage.textContent = "El plazo debe ser un número entero positivo.";
         return;
     }
 
     const monto = Number(montoPrestamo);
     const meses = Number(plazo);
 
-    const tasaMensual = (tasaInteresFija / 100) / 12; 
-    let totalAPagar = 0; 
-    let cuotaMensual = 0; 
+    const tasaMensual = (tasaInteresFija / 100) / 12;
+    let totalAPagar = 0;
+    let cuotaMensual = 0;
 
     // Array para almacenar las cuotas mensuales
     const cuotasMensuales = [];
@@ -37,27 +42,86 @@ function simularPagos() {
         totalAPagar += cuotaMensual; // Sumar a total a pagar
     }
 
-    console.log(`Monto del préstamo: $${Math.round(monto)}`);
-    console.log(`Tasa de interés: ${tasaInteresFija}%`);
-    console.log(`Plazo: ${meses} meses`);
-    console.log(`Cuota mensual: $${Math.round(cuotaMensual)}`);
-    console.log(`Total a pagar: $${Math.round(totalAPagar)}`);
-    
-    // metedo filfer
-    const cuotasAltas = cuotasMensuales.filter(cuota => cuota > 0); // Filtra todas las cuotas, ya que todas son mayores que 0
+    // Mostrar resultados
+    document.getElementById('totalAmount').textContent = `Monto del préstamo: $${Math.round(monto)}`;
+    document.getElementById('monthlyPayment').textContent = `Cuota mensual: $${Math.round(cuotaMensual)}`;
+    document.getElementById('totalToPay').textContent = `Total a pagar: $${Math.round(totalAPagar)}`;
 
-    // metedo find para obtener la primera cuota del array 
-    const primeraCuota = cuotasMensuales.find(cuota => cuota >= 0); // Encuentra la primera cuota que sea mayor o igual a 0
+    // Método filter
+    const cuotasAltas = cuotasMensuales.filter(cuota => cuota > 0);
+
+    // Método find
+    const primeraCuota = cuotasMensuales.find(cuota => cuota >= 0);
 
     // Mostrar todas las cuotas mensuales
-    console.log(`Todas las cuotas mensuales: $${cuotasMensuales.map(cuota => Math.round(cuota)).join(', ')}`);
-    console.log(`Cuotas filtradas: $${cuotasAltas.map(cuota => Math.round(cuota)).join(', ')}`);
+    document.getElementById('allPayments').textContent = `Todas las cuotas mensuales: $${cuotasMensuales.map(cuota => Math.round(cuota)).join(', ')}`;
+    document.getElementById('filteredPayments').textContent = `Cuotas filtradas: $${cuotasAltas.map(cuota => Math.round(cuota)).join(', ')}`;
 
     if (primeraCuota) {
-        console.log(`Primera cuota encontrada: $${Math.round(primeraCuota)}`);
+        document.getElementById('firstPayment').textContent = `Primera cuota encontrada: $${Math.round(primeraCuota)}`;
     } else {
-        console.log(`No se encontró ninguna cuota.`);
+        document.getElementById('firstPayment').textContent = `No se encontró ninguna cuota.`;
+    }
+
+    results.classList.remove('hidden');
+
+    // Guardar datos en localStorage
+    const datosPrestamo = {
+        montoPrestamo: monto,
+        plazo: meses,
+        tasaInteresFija: tasaInteresFija,
+        cuotaMensual: cuotaMensual,
+        totalAPagar: totalAPagar,
+        cuotasMensuales: cuotasMensuales
+    };
+    localStorage.setItem('datosPrestamo', JSON.stringify(datosPrestamo));
+}
+
+function cargarDatosGuardados() {
+    const datosGuardados = localStorage.getItem('datosPrestamo');
+    if (datosGuardados) {
+        const { montoPrestamo, plazo, cuotaMensual, totalAPagar, cuotasMensuales } = JSON.parse(datosGuardados);
+
+        document.getElementById('loanAmount').value = montoPrestamo;
+        document.getElementById('loanTerm').value = plazo;
+
+        document.getElementById('totalAmount').textContent = `Monto del préstamo: $${Math.round(montoPrestamo)}`;
+        document.getElementById('monthlyPayment').textContent = `Cuota mensual: $${Math.round(cuotaMensual)}`;
+        document.getElementById('totalToPay').textContent = `Total a pagar: $${Math.round(totalAPagar)}`;
+        document.getElementById('allPayments').textContent = `Todas las cuotas mensuales: $${cuotasMensuales.map(cuota => Math.round(cuota)).join(', ')}`;
+        
+        document.getElementById('results').classList.remove('hidden');
     }
 }
 
-simularPagos();
+function limpiarFormulario() {
+    // Limpiar los campos del formulario
+    document.getElementById('loanAmount').value = '';
+    document.getElementById('loanTerm').value = '';
+
+    // Limpiar los resultados
+    document.getElementById('totalAmount').textContent = '';
+    document.getElementById('monthlyPayment').textContent = '';
+    document.getElementById('totalToPay').textContent = '';
+    document.getElementById('allPayments').textContent = '';
+    document.getElementById('filteredPayments').textContent = '';
+    document.getElementById('firstPayment').textContent = '';
+
+    // Ocultar los resultados y mensajes de error
+    document.getElementById('results').classList.add('hidden');
+    document.getElementById('errorMessage').textContent = '';
+
+    // Limpiar localStorage
+    localStorage.removeItem('datosPrestamo');
+}
+
+document.getElementById('calculateButton').addEventListener('click', function(event) {
+    event.preventDefault(); // Previene el comportamiento por defecto del formulario
+    calcularPrestamo();
+});
+
+document.getElementById('clearButton').addEventListener('click', function() {
+    limpiarFormulario();
+});
+
+document.addEventListener('DOMContentLoaded', cargarDatosGuardados);
