@@ -3,24 +3,47 @@ function esNumeroValido(valor) {
     return valor !== "" && !/[^0-9.]/.test(valor) && Number(valor) > 0;
 }
 
-function calcularPrestamo() {
+// Función para simular una llamada a la API que obtiene la tasa de interés
+function obtenerTasaInteres() {
+    return new Promise((resolve) => {
+        // Simula un retraso como si estuvieras haciendo una llamada a una API
+        setTimeout(() => {
+            const tasaInteresFija = 2;
+            resolve(tasaInteresFija);
+        }, 3000); // Retraso de 3 segundo
+    });
+}
+
+// Muestra un mensaje de carga
+function mostrarCarga() {
+    document.getElementById('loadingMessage').textContent = "Cargando... Por favor espera.";
+    document.getElementById('results').classList.add('hidden'); // Oculta resultados previos
+}
+
+// Oculta el mensaje de carga
+function ocultarCarga() {
+    document.getElementById('loadingMessage').textContent = "";
+}
+
+async function calcularPrestamo() {
     const montoPrestamo = document.getElementById('loanAmount').value;
     const plazo = document.getElementById('loanTerm').value;
-    const tasaInteresFija = 2;
 
     const errorMessage = document.getElementById('errorMessage');
     const results = document.getElementById('results');
 
     // Limpiar mensajes de error y resultados anteriores
     errorMessage.textContent = '';
-    results.classList.add('hidden');
+    mostrarCarga(); // Mostrar el mensaje de carga
 
     // Verificar que las entradas sean válidas
     if (!esNumeroValido(montoPrestamo)) {
+        ocultarCarga(); // Ocultar carga si hay error
         errorMessage.textContent = "El monto del préstamo debe ser un número positivo.";
         return;
     }
     if (!esNumeroValido(plazo) || !Number.isInteger(Number(plazo))) {
+        ocultarCarga(); // Ocultar carga si hay error
         errorMessage.textContent = "El plazo debe ser un número entero positivo.";
         return;
     }
@@ -28,6 +51,7 @@ function calcularPrestamo() {
     const monto = Number(montoPrestamo);
     const meses = Number(plazo);
 
+    const tasaInteresFija = await obtenerTasaInteres(); // Obtener la tasa de interés
     const tasaMensual = (tasaInteresFija / 100) / 12;
     let totalAPagar = 0;
     let cuotaMensual = 0;
@@ -63,7 +87,8 @@ function calcularPrestamo() {
         document.getElementById('firstPayment').textContent = `No se encontró ninguna cuota.`;
     }
 
-    results.classList.remove('hidden');
+    ocultarCarga(); 
+    results.classList.remove('hidden'); // Mostrar los resultados
 
     // Guardar datos en localStorage
     const datosPrestamo = {
@@ -99,7 +124,6 @@ function limpiarFormulario() {
     document.getElementById('loanAmount').value = '';
     document.getElementById('loanTerm').value = '';
 
-    // Limpiar los resultados
     document.getElementById('totalAmount').textContent = '';
     document.getElementById('monthlyPayment').textContent = '';
     document.getElementById('totalToPay').textContent = '';
@@ -107,7 +131,6 @@ function limpiarFormulario() {
     document.getElementById('filteredPayments').textContent = '';
     document.getElementById('firstPayment').textContent = '';
 
-    // Ocultar los resultados y mensajes de error
     document.getElementById('results').classList.add('hidden');
     document.getElementById('errorMessage').textContent = '';
 
@@ -116,7 +139,7 @@ function limpiarFormulario() {
 }
 
 document.getElementById('calculateButton').addEventListener('click', function(event) {
-    event.preventDefault(); // Previene el comportamiento por defecto del formulario
+    event.preventDefault(); 
     calcularPrestamo();
 });
 

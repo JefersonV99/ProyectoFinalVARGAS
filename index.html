@@ -40,15 +40,18 @@
     <button type="button" id="clearButton">Limpiar</button>
 </form>
 
-<div id="results" class="results hidden">
-    <p id="totalAmount"></p>
-    <p id="monthlyPayment"></p>
-    <p id="totalToPay"></p>
-    <p id="allPayments"></p>
-    <p id="filteredPayments"></p>
-    <p id="firstPayment"></p>
+<div id="loadingMessage" class="loading-message"></div>
+<div id="results" class="hidden">
+    <h2>Resultados del Préstamo</h2>
+    <div class="result-item" id="totalAmount"></div>
+    <div class="result-item" id="monthlyPayment"></div>
+    <div class="result-item" id="totalToPay"></div>
+    <h3>Detalles de Pagos Mensuales</h3>
+    <div class="result-item" id="allPayments"></div>
+    <div class="result-item" id="filteredPayments"></div>
+    <div class="result-item" id="firstPayment"></div>
 </div>
-<p id="errorMessage" class="error hidden"></p>
+<div id="errorMessage" class="error-message"></div>
 
 <script src="./main.js"></script>
 </body>
