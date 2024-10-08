@@ -3,56 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PreEntrega 3</title>
+    <title>Proyecto final</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+        .hidden {
+            display: none;
+        }
+        .results {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+    </style>
 </head>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        padding: 20px;
-        max-width: 600px;
-        margin: auto;
-    }
-    .hidden {
-        display: none;
-    }
-    .results {
-        margin-top: 20px;
-        border: 1px solid #ccc;
-        padding: 10px;
-        background-color: #f9f9f9;
-    }
-    .error {
-        color: red;
-    }
-</style>
-
 <body>
-<h1>🤑¡Bienvenid@ al simulador de Préstamos!🤑</h1>
+    <h1>🤑¡Bienvenid@ al simulador de Préstamos!🤑</h1>
 
-<form id="loanForm">
-    <label for="loanAmount">Monto del préstamo ($):</label>
-    <input type="number" id="loanAmount" required>
-    <br><br>
-    <label for="loanTerm">Plazo del préstamo (meses):</label>
-    <input type="number" id="loanTerm" required>
-    <br><br>
-    <button type="button" id="calculateButton">Calcular</button>
-    <button type="button" id="clearButton">Limpiar</button>
-</form>
+    <form id="loanForm">
+        <label for="loanAmount">Monto del préstamo ($):</label>
+        <input type="number" id="loanAmount" required>
+        <br><br>
+        <label for="loanTerm">Plazo del préstamo (meses):</label>
+        <input type="number" id="loanTerm" required>
+        <br><br>
+        <button type="button" id="calculateButton">Calcular</button>
+        <button type="button" id="clearButton">Limpiar</button>
+    </form>
 
-<div id="loadingMessage" class="loading-message"></div>
-<div id="results" class="hidden">
-    <h2>Resultados del Préstamo</h2>
-    <div class="result-item" id="totalAmount"></div>
-    <div class="result-item" id="monthlyPayment"></div>
-    <div class="result-item" id="totalToPay"></div>
-    <h3>Detalles de Pagos Mensuales</h3>
-    <div class="result-item" id="allPayments"></div>
-    <div class="result-item" id="filteredPayments"></div>
-    <div class="result-item" id="firstPayment"></div>
-</div>
-<div id="errorMessage" class="error-message"></div>
+    <div id="loadingMessage" class="loading-message"></div>
+    <div id="results" class="hidden">
+        <h2>Resultados del Préstamo</h2>
+        <div class="result-item" id="totalAmount"></div>
+        <div class="result-item" id="monthlyPayment"></div>
+        <div class="result-item" id="totalToPay"></div>
+        <h3>Detalles de Pagos Mensuales</h3>
+        <div class="result-item" id="allPayments"></div>
+        <div class="result-item" id="filteredPayments"></div>
+        <div class="result-item" id="firstPayment"></div>
+    </div>
+    <div id="errorMessage" class="error-message"></div>
 
-<script src="./main.js"></script>
+    <script src="./main.js"></script>
 </body>
 </html>
