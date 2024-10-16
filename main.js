@@ -4,14 +4,18 @@ function esNumeroValido(valor) {
 }
 
 // Función para simular una llamada a la API que obtiene la tasa de interés
-function obtenerTasaInteres() {
-    return new Promise((resolve) => {
-        // Simula un retraso como si estuvieras haciendo un Fetch
-        setTimeout(() => {
-            const tasaInteresFija = 2; 
-            resolve(tasaInteresFija);
-        }, 3000); 
-    });
+async function obtenerTasaInteres() {
+    try {
+        const response = await fetch('https://jsonplaceholder.typicode.com/posts/1'); // URL de prueba
+        if (!response.ok) {
+            throw new Error('Error en la respuesta de la API');
+        }
+
+        return 5; // Ejemplo de tasa de interés
+    } catch (error) {
+        console.error('Error al obtener la tasa de interés:', error);
+        return 2; 
+    }
 }
 
 function mostrarCarga() {
@@ -29,7 +33,6 @@ async function calcularPrestamo() {
 
     mostrarCarga(); 
 
-    // Verificar que las entradas sean válidas
     if (!esNumeroValido(montoPrestamo)) {
         ocultarCarga(); 
         Swal.fire({
